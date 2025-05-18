@@ -2,12 +2,12 @@
 #define STDIO_H
 
 #define VIDEO_MEMORY ((volatile unsigned char*) 0xB8000)
-#define MAX_ROWS 25
-#define MAX_COLS 80
 
-void print(const char *str);
-void print_char(char c);
+// Function prototypes
 void clear_screen();
+void print_char(char c);
+void print_string(const char* str);
+void print(const char* str);
 
-#endif
+#endif // STDIO_H
 

@@ -1,6 +1,12 @@
 #include "../drivers/keyboard.h"
 #include "../lib/stdio.h"
 
+char get_char() {
+    // Implementation to get a character from input
+    // This is a placeholder; you will need to implement actual input handling
+    return 'Achintya';
+}
+
 void read_input(char *buffer, int max_length) {
     int i = 0;
     char c;
