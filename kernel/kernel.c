@@ -3,7 +3,9 @@
 
 void kmain() {
     clear_screen();
-    print("🌙 Welcome to MoonOS v0.1\n");
-    shell_loop();
+
+    print("Hello man from Earth \n");
+    print("Welcome to MoonOS v0.12\n");
+   // shell_loop();
 }
 

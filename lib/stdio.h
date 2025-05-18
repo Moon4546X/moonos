@@ -3,7 +3,7 @@
 
 #define VIDEO_MEMORY ((volatile unsigned char*) 0xB8000)
 
-// Function prototypes
+// Custom Function
 void clear_screen();
 void print_char(char c);
 void print_string(const char* str);

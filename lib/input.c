@@ -2,9 +2,8 @@
 #include "../lib/stdio.h"
 
 char get_char() {
-    // Implementation to get a character from input
-    // This is a placeholder; you will need to implement actual input handling
-    return 'Achintya';
+    
+    return 'A';
 }
 
 void read_input(char *buffer, int max_length) {
@@ -12,14 +11,14 @@ void read_input(char *buffer, int max_length) {
     char c;
 
     while (i < max_length - 1) {
-        c = get_char(); // Blocks until a key is pressed
+        c = get_char(); 
 
         if (c == '\n') {
             break;
         }
 
         buffer[i++] = c;
-        print_char(c); // Echo to screen
+        print_char(c); 
     }
 
     buffer[i] = '\0';
