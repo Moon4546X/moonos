@@ -1,0 +1,16 @@
+moonos/
+├── bootloader/          # Bootloader in assembly
+│   └── boot.asm
+├── kernel/              # Kernel logic (written in C)
+│   └── kernel.c
+├── lib/                 # Standard lib replacements
+│   ├── stdio.c
+│   ├── stdio.h
+│   ├── string.c
+│   └── string.h
+├── shell/               # Command shell logic
+│   └── shell.c
+│   └── shell.h
+├── linker.ld            # Tells the linker where to place things
+├── Makefile             # Build system
+└── iso/                 # Used temporarily for ISO creation (GRUB)

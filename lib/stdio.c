@@ -1,18 +1,21 @@
+// lib/stdio.c
+
 #include "../lib/stdio.h"
+#include "../lib/ports.h"  // If you're writing to VGA using outb()
 
-static int cursor = 0;
+#define VIDEO_MEMORY (char*)0xb8000
+int cursor = 0;
 
-void print(const char *str) {
+void print(const char* str) {
     while (*str) {
-        VIDEO_MEMORY[cursor++] = *str++;        // Character
-        VIDEO_MEMORY[cursor++] = 0x07;          // Light grey on black
+        print_char(*str++);
     }
 }
 
-void clear_screen() {
-    for (int i = 0; i < MAX_ROWS * MAX_COLS * 2; i++) {
-        VIDEO_MEMORY[i] = 0;
-    }
-    cursor = 0;
+void print_char(char c) {
+    volatile char* video = VIDEO_MEMORY;
+    video[cursor * 2] = c;
+    video[cursor * 2 + 1] = 0x07;
+    cursor++;
 }
 
