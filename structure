@@ -1,16 +1,51 @@
 moonos/
-├── bootloader/          # Bootloader in assembly
+├── bootloader/         
 │   └── boot.asm
-├── kernel/              # Kernel logic (written in C)
+├── kernel/              
 │   └── kernel.c
-├── lib/                 # Standard lib replacements
+├── lib/                
 │   ├── stdio.c
 │   ├── stdio.h
 │   ├── string.c
-│   └── string.h
-├── shell/               # Command shell logic
+│   ├── string.h
+│   ├── input.c
+│   ├── input.h
+│   ├── system.c
+│   └── system.h
+│   ├── ports.c
+│   └── ports.h
+├── shell/               
 │   └── shell.c
 │   └── shell.h
-├── linker.ld            # Tells the linker where to place things
-├── Makefile             # Build system
-└── iso/                 # Used temporarily for ISO creation (GRUB)
+├── linker.ld           
+├── Makefile             
+├── iso/                 
+├── build/
+|   ├─── bootloader/
+|   |      └── boot.o
+|   ├─── drivers/
+|   |      └── keyboard.o
+|   ├─── kernel/
+|   |      └── kernel.o
+|   ├─── lib/
+|   |      ├─── input.o
+|   |      ├─── ports.o
+|   |      ├─── stdio.o
+|   |      ├─── string.o
+|   |      └─── system.o
+|   |      
+|   ├─── shell/
+|   |      └─── shell.o
+|   └─── kernel.bin
+├── cpu/
+├── drivers/                
+│   ├── idt.c
+│   ├── idt.h
+│   ├── keyboard.c
+│   └── keyboard.h
+└── isodir/
+    ├─── boot/
+    |      └── grub/
+    |           └── grub.cfg
+    └─── kernel.bin
+
