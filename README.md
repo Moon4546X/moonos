@@ -7,4 +7,6 @@ A cli-based lightweight operating system written in assembly and c, inspired by 
  | |  | | (_) | (_) | | | | |_| |___) |
  |_|  |_|\___/ \___/|_| |_|\___/|____/ 
 ```
-                                      
+
+![image](https://github.com/user-attachments/assets/e3a3afb8-1885-4ca6-bc6a-d12c8641d9d8)
+
