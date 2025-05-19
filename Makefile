@@ -1,53 +1,92 @@
 # Directories
-BUILD_DIR = build
-ISO_DIR = isodir
+BUILD_DIR := build
+ISO_DIR := isodir
+GRUB_DIR := $(ISO_DIR)/boot/grub
 
-# Compiler and flags
-CC = gcc
-CFLAGS = -m32 -ffreestanding -O2 -Wall -Wextra
-LD = ld
-LDFLAGS = -m elf_i386
+# Tools
+CC := gcc
+LD := ld
+NASM := nasm
+GRUB_MKRESCUE := grub-mkrescue
+QEMU := qemu-system-i386
 
-# Source files
-SOURCES = \
-	bootloader/boot.asm \
+# Flags
+CFLAGS := -m32 -ffreestanding -O2 -Wall -Wextra -I. -Iinclude -Icpu -Idrivers -Ilib
+LDFLAGS := -m elf_i386
+
+# Sources
+C_SOURCES := \
 	kernel/kernel.c \
 	lib/stdio.c \
 	lib/string.c \
 	lib/input.c \
 	lib/system.c \
-	shell/shell.c
+	lib/ports.c \
+	shell/shell.c \
+	drivers/keyboard.c \
+	
 
-# Object files (auto-generated)
-OBJECTS = $(patsubst %.c, $(BUILD_DIR)/%.o, $(filter %.c, $(SOURCES)))
-ASM_OBJECTS = $(patsubst %.asm, $(BUILD_DIR)/%.o, $(filter %.asm, $(SOURCES)))
+ASM_SOURCES := \
+	bootloader/boot.asm
 
-# Kernel binary
-KERNEL = $(BUILD_DIR)/kernel.bin
+# Object files
+OBJECTS := $(patsubst %.c, $(BUILD_DIR)/%.o, $(C_SOURCES))
+ASM_OBJECTS := $(patsubst %.asm, $(BUILD_DIR)/%.o, $(ASM_SOURCES))
 
-# ISO file
-ISO = moonos.iso
+# Targets
+KERNEL := $(BUILD_DIR)/kernel.bin
+ISO := moonos.iso
 
+# Default
 all: $(ISO)
 
+# Compile C source
 $(BUILD_DIR)/%.o: %.c
-	mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
+	@echo "🧠 Compiling $<"
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Assemble ASM source
 $(BUILD_DIR)/%.o: %.asm
-	mkdir -p $(dir $@)
-	nasm -f elf32 $< -o $@
+	@mkdir -p $(dir $@)
+	@echo "⚙️ Assembling $<"
+	$(NASM) -f elf32 $< -o $@
 
+# Link kernel
 $(KERNEL): $(ASM_OBJECTS) $(OBJECTS)
+	@echo "🔗 Linking kernel..."
+	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -T linker.ld -o $@ $(ASM_OBJECTS) $(OBJECTS)
+	@echo "✅ Kernel linked at $@"
 
+# Build ISO
 $(ISO): $(KERNEL)
-	mkdir -p $(ISO_DIR)/boot
+	@echo "📦 Creating bootable ISO..."
+	@mkdir -p $(GRUB_DIR)
 	cp $(KERNEL) $(ISO_DIR)/boot/kernel.bin
-	grub-mkrescue -o $@ $(ISO_DIR)
+	echo 'set timeout=0' > $(GRUB_DIR)/grub.cfg
+	echo 'set default=0' >> $(GRUB_DIR)/grub.cfg
+	echo 'menuentry \"MoonOS\" {' >> $(GRUB_DIR)/grub.cfg
+	echo '  multiboot /boot/kernel.bin' >> $(GRUB_DIR)/grub.cfg
+	echo '  boot' >> $(GRUB_DIR)/grub.cfg
+	echo '}' >> $(GRUB_DIR)/grub.cfg
+	$(GRUB_MKRESCUE) -o $@ $(ISO_DIR)
+	@echo "🚀 ISO ready: $@"
 
-clean:
-	rm -rf $(BUILD_DIR) $(ISO_DIR) $(ISO)
-
+# Run in QEMU
 run: all
-	qemu-system-i386 -cdrom $(ISO)
+	@echo "💻 Launching MoonOS in QEMU..."
+	$(QEMU) -cdrom $(ISO)
+
+# Debugging option
+debug: CFLAGS += -g
+debug: all
+
+# Clean build
+clean:
+	@echo "🧹 Cleaning build artifacts..."
+	rm -rf $(BUILD_DIR) $(ISO_DIR) $(ISO)
+	@echo "✅ Clean complete"
+
+.PHONY: all clean run debug
+

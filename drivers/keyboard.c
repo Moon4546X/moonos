@@ -10,19 +10,6 @@ unsigned char keyboard_map[128] = {
    
 };
 
-char get_char() {
-    unsigned char scancode;
 
-    
-    while (1) {
-        if (port_byte_in(0x64) & 0x01) { 
-            scancode = port_byte_in(0x60);
 
-            
-            if (scancode < 128) {
-                return keyboard_map[scancode];
-            }
-        }
-    }
-}
 

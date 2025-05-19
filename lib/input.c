@@ -1,6 +1,8 @@
 #include "../drivers/keyboard.h"
 #include "../lib/stdio.h"
 
+void init_keyboard();
+
 char get_char() {
     
     return 'A';
